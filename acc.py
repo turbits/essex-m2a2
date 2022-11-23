@@ -12,7 +12,8 @@
 
 class AdaptiveCruiseControl():
   vehicle_in_range #bool
-  commands_queue #string queue
+  target_speed = 0
+  commands_queue =  #string queue
 
   #void
   def acc_accelerate():

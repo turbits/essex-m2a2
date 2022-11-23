@@ -9,3 +9,29 @@
 # School: University of Essex
 # Date: September-December, 2022
 # +===================================================================+
+
+prompt = "$"
+
+# https://stackoverflow.com/a/1695250
+def enum(**enums):
+  return type('Enum', (), enums)
+
+def c_err(code, msg):
+  print "ERROR: {}\n{}".format(code, msg)
+  return
+
+def get_choice(list):
+  for count, value in enumerate(list):
+    print "{}: {}".format(count, value)
+
+  user_input = raw_input("{} ".format(prompt))
+  for count, value in enumerate(list):
+    if user_input == value or int(user_input) == count:
+      return value
+  
+  print c_err("AVS-FRO-USER", "Invalid choice, please try again")
+  return get_choice(list)
+
+get_choice(["test1", "trevor", "mocha"])
+
+

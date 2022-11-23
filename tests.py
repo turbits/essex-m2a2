@@ -17,10 +17,15 @@ class VehicleAccelerationTest(unittest.TestCase):
   vehicle = new Vehicle()
   vehicle.
   # Accelerate vehicle by 4.45km/h
-  def test(self):
-    self.assertEqual(vehicle.accelerate(4.45), 4.45)
+  def testAccelerate(self):
+    self.assertEqual(vehicle.accelerate(4.45), vehicle.current_speed == 4.45)
 
+class VehicleActionAppendTest(unittest.TestCase):
+  vehicle = new Vehicle()
+  
+  # append an action without a value
+  def testAppendNoValue(self):
+    self.assertEqual(vehicle.append_action("brake"), vehicle.action_history[0] == ["brake"])
 
-# list<string, bool> (each test and pass)
-def test():
-  pass
+  def testAppendWithValue(self):
+    self.assertEqual(vehicle.append_action("turn", 2.24), vehicle.action_history[1] == ["turn",2.24])
