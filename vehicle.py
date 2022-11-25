@@ -11,12 +11,19 @@
 # +===================================================================+
 
 from utility import enum
+from lka import LaneKeepingAssist
+from acc import AdaptiveCruiseControl
+from aeb import AutomaticEmergencyBraking
 
 class Vehicle():
 
   STATES = enum(NONE="NONE", OFF="OFF", IDLE="IDLE", ACCELERATE="ACCELERATE", BRAKE="BRAKE", MAINTAIN="MAINTAIN", TURN="TURN")
 
-  direction = 0
+  lka = LaneKeepingAssist()
+  acc = AdaptiveCruiseControl()
+  aeb = AutomaticEmergencyBraking()
+
+  direction = 0 # north
   speed = 0
   running = False
   action_history = []
@@ -52,9 +59,3 @@ class Vehicle():
 
   def set_state(self, state):
     self.state = state
-
-vh = Vehicle()
-
-print(vh.get_state())
-vh.set_state(vh.STATES.IDLE)
-print(vh.get_state())
