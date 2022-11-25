@@ -31,7 +31,3 @@ def get_choice(list):
   
   print c_err("AVS-FRO-USER", "Invalid choice, please try again")
   return get_choice(list)
-
-get_choice(["test1", "trevor", "mocha"])
-
-
