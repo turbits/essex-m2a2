@@ -10,17 +10,21 @@
 # Date: September-December, 2022
 # +===================================================================+
 
-class Frontend(vehicle):
-  vh = vehicle
+class Frontend():
+  vh = None
   choice = 0
 
-  def get_vehicle_stats(self):
-    # running
+  def __init__(self, vehicle):
+    self.vh = vehicle
 
-    # direction
-    # speed
-    # state
-    # last action
+  def get_vehicle_stats(self):
+    return {
+      'running': self.vh.running,
+      'direction': self.vh.direction,
+      'speed': self.vh.speed,
+      'state': self.vh.state,
+      'last action': "None" if len(self.vh.action_history) == 0 else self.vh.action_history[-1]
+    }
   
   def update(self):
     pass

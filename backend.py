@@ -12,8 +12,11 @@
 
 from vehicle import Vehicle
 
-class Backend(vehicle):
-  vh = vehicle
+class Backend():
+  vh = None
+  
+  def __init__(self, vehicle):
+    self.vh = vehicle
 
   # generate road
   def generate_road(self):
