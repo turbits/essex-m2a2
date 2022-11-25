@@ -11,13 +11,13 @@
 # +===================================================================+
 
 class AutomaticEmergencyBraking():
-  collision_detected = false #bool
+  collision_detected = False #bool
   entities_detected = [] #string list
   
   # bool
-  def detect_collision():
+  def detect_collision(self):
     pass
 
   # void
-  def emergency_brake():
+  def emergency_brake(self):
     pass

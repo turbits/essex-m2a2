@@ -10,15 +10,17 @@
 # Date: September-December, 2022
 # +===================================================================+
 
+from collections import deque
+
 class AdaptiveCruiseControl():
-  vehicle_in_range #bool
+  vehicle_in_range = False #bool
   target_speed = 0
-  commands_queue =  #string queue
+  commands_queue = deque() #string queue
 
   #void
-  def acc_accelerate():
+  def acc_accelerate(self):
     pass
 
   #void
-  def acc_decelerate():
+  def acc_decelerate(self):
     pass

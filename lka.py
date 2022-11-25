@@ -11,15 +11,19 @@
 # +===================================================================+
 
 class LaneKeepingAssist():
-  left_distance = 1.0 #float; 1.0 being perfectly centered in lane
-  right_distance = 1.0 #float; 1.0 being perfectly centered in lane
+  left_distance = 1.0 #float; 1.0 being centered in lane
+  right_distance = 1.0 #float; 1.0 being centered in lane
   current_drift = {'left':0,'right':0} #string,float; 
   max_drift = 2.0 #float; 2.0 being a tire is on the line
   
-  # float
-  def correct_drift():
-    pass
+  def get_drift(self):
+    return self.current_drift
 
-    # void
-  def set_drift(string, float):
-    pass
+  def correct_drift(self):
+    self.set_drift('left', 0)
+    self.set_drift('right', 0)
+
+  def set_drift(self, side, value):
+    for s in self.current_drift:
+      if side == s:
+        self.current_drift[s] = value
