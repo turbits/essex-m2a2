@@ -11,6 +11,7 @@
 # +===================================================================+
 
 import signal
+from sys import stdout
 import sys
 import time
 from vehicle import Vehicle
@@ -19,6 +20,7 @@ from backend import Backend
 
 def main():
   vh = Vehicle()
+  stats = {}
 
   program_running = True
   frontend = Frontend(vh)
@@ -28,9 +30,6 @@ def main():
   while program_running:
     frontend.update()
     backend.update()
-
-    sys.stdout.write(frontend.get_vehicle_stats())
-    sys.stdout.flush()
     
     # update interval
     time.sleep(update_tick)
