@@ -10,8 +10,17 @@
 # Date: September-December, 2022
 # +===================================================================+
 
-class Frontend():
+class Frontend(vehicle):
+  vh = vehicle
   choice = 0
+
+  def get_vehicle_stats(self):
+    # running
+
+    # direction
+    # speed
+    # state
+    # last action
   
-  # get choice
-  def get
+  def update(self):
+    pass

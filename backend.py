@@ -10,5 +10,21 @@
 # Date: September-December, 2022
 # +===================================================================+
 
-class Backend():
+from vehicle import Vehicle
+
+class Backend(vehicle):
+  vh = vehicle
+
+  # generate road
+  def generate_road(self):
+    road = {"left": 0, "right": 0} # 0,0 straight; 1,0 turning left 1deg per second
+
+
+  # generate traffic
+  def generate_traffic(self):
+    traffic = Vehicle()
+    traffic.accelerate(50.4)
   
+  # update method will run every 1 second
+  def update(self):
+    pass
