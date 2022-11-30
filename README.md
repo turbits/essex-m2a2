@@ -23,6 +23,8 @@ School: University of Essex
 
 I began the development of this program with the previous module, available [here](https://github.com/turbits/essex-m2a1) as an essay. The overall premise was to design a partial autonomous vehicle system that contained three processes present in autonomous vehicles. I chose Lane-keeping Assist (LKA), Automatic Emergency Braking (AEB), and Adaptive Cruise Control (ACC). These three systems I felt represented separate concerns as far as autonomy in a vehicle goes, with LKA controlling the direction of the vehicle, ACC controlling cruising speed, and AEB representing one of many critical safety systems designed to assist or take over in the event of an emergency detection.
 
+The program is obviously not a full design and implementation of an autonomous vehicle or the aforementioned systems, but serves as a representation of what one could look like. The backend generated information is very basic and the functions of the vehicle are immediate and do not take into account factors that would be exhibited on a real-world equivalent. For example, if the car is going 40km/h and the tires are turned 20 degrees left, physics are ignored and the turn is immediate.
+
 ---
 
 ## Error Codes
