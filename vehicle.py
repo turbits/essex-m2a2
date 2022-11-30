@@ -14,48 +14,64 @@ from utility import enum
 from lka import LaneKeepingAssist
 from acc import AdaptiveCruiseControl
 from aeb import AutomaticEmergencyBraking
+from state import State
 
 class Vehicle():
-
-  STATES = enum(NONE="NONE", OFF="OFF", IDLE="IDLE", ACCELERATE="ACCELERATE", BRAKE="BRAKE", MAINTAIN="MAINTAIN", TURN="TURN")
-
   lka = LaneKeepingAssist()
   acc = AdaptiveCruiseControl()
   aeb = AutomaticEmergencyBraking()
+  state = State()
 
   direction = 0 # north
   speed = 0
   running = False
   action_history = []
-  state = STATES.NONE
+  current_state = State.NONE
+  available_functions = ("start", "stop", "accelerate", "brake", "turn", "append_action", "get_state", "set_state")
 
   def start(self):
-    running = True
+    self.running = True
 
   def stop(self):
-    running = False
+    self.running = False
 
   def accelerate(self, value):
     if value <= 0:
       return
-    speed += value
+    self.speed += value
 
   def brake(self, value):
-    speed -= 0
+    if value <= 0:
+      return
+    self.speed -= value
 
   def turn(self, degrees):
-    direction += degrees
+    if value <= 0:
+      return
+    self.direction += degrees
 
   def append_action(self, action_name, value=0):
     print action_name
     print value
     if value == 0:
-      Vehicle.action_history.append([action_name])
+      self.action_history.append([action_name])
     else:
-      Vehicle.action_history.append([action_name, value])
+      self.action_history.append([action_name, value])
 
   def get_state(self):
-    return self.state
+    return self.current_state
 
   def set_state(self, state):
-    self.state = state
+    if state not in self.state.states:
+      print "not in"
+      return
+    self.current_state = state
+    print self.current_state
+    return
+
+  def vehicle_functions(self):
+    print "Vehicle Functions:"
+    for count, item in enumerate(self.available_actions):
+      print "{}: {}".format(count, item)
+    return
+    
