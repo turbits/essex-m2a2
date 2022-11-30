@@ -26,8 +26,20 @@ def get_choice(list):
 
   user_input = raw_input("{} ".format(prompt))
   for count, value in enumerate(list):
-    if user_input == value or int(user_input) == count:
-      return value
-  
+    if user_input == value:
+      return value.lower().strip()
+    elif int(user_input) == count:
+      return int(count)
   print c_err("AVS-FRO-USER", "Invalid choice, please try again")
   return get_choice(list)
+
+def get_yn(question):
+  reply = str(raw_input(question + " (y/n): ")).lower().strip()
+
+  if reply not in ['y', 'yes', 'n', 'no']:
+    print c_err("AVS-FRO-USER", "Invalid choice, please try again")
+    return get_yn(question)
+  
+  if reply in ['y', 'yes']:
+    return True
+  return False
