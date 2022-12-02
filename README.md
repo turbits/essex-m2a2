@@ -25,13 +25,15 @@ I began the development of this program with the previous module, available [her
 
 The program is obviously not a full design and implementation of an autonomous vehicle or the aforementioned systems, but serves as a representation of what one could look like. The backend generated information is very basic and the functions of the vehicle are immediate and do not take into account factors that would be exhibited on a real-world equivalent. For example, if the car is going 40km/h and the tires are turned 20 degrees left, physics are ignored and the turn is immediate.
 
+As part of the process of developing this program, I implemeneted threading to be able to run the backend data generation while the user was able to use the frontend command line interface. This was important as otherwise only the front or the backend could be used at any given time.
+
 ---
 
 ## Error Codes
 
 `AVS-XYZ-123`
 
-`AVS` - name of the program as a whole; in this program's case: AVS, Autonomous Vehicle System
+`AVS` - name of the program; in this case, AVS (Autonomous Vehicle System)
 
 `XYZ` - identifier of the system
 
