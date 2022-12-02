@@ -16,41 +16,65 @@ import sys
 import time
 import threading
 from title import title_art
-from vehicle import Vehicle
 from frontend import Frontend
 from backend import Backend
 from utility import get_choice
 
-class Program():
-  # threads will use this event to close
-  stop_event = threading.Event()
+class Program(object):
+  _instance = None
+
+  data_gen_on = False
   # instantiate our main vehicle
-  vh = Vehicle()
   # update_tick dictates how quickly the simulation updates (front and backend)
   update_tick = 1
-  backend = Backend(vh)
-  frontend = Frontend(stop_event)
+  frontend = None
+  backend = None
 
-  # threading
-  frontend_thread = threading.Thread(target=frontend.main_menu)
-  frontend_thread.daemon = True
+  # THREADING
+  # threads will use this event to close
+  stop_event = threading.Event()
+  backend_stop_event = threading.Event()
+  backend_thread = None
+  frontend_thread = None
   
-  # backend_thread = threading.Thread(target=backend.update)
-  # backend_thread.daemon = True
+  def __init__(self):
+    raise RuntimeError("Call instance() instead")
   
+  # https://python-patterns.guide/gang-of-four/singleton/
+  @classmethod
+  def instance(cls):
+    if cls._instance is None:
+      # print "Creating new instance of Program"
+      cls._instance = cls.__new__(cls)
+      cls._instance.frontend = Frontend(cls._instance)
+      cls._instance.backend = Backend(cls._instance)
+    return cls._instance
+
+  def start_data_generation(self):
+    # if data generation is turned on, create and start a backend thread
+    # Thread setup; daemon = threads will die on process kill
+    self.data_gen_on = True
+    self.backend_thread = threading.Thread(target=self.backend.start_backend)
+    self.backend_thread.daemon = True
+    self.backend_thread.start()
+  
+  def stop_data_generation(self):
+    self.data_gen_on = False
 
   def main(self):
+    # Thread setup; daemon = threads will die on process kill
+    self.frontend = Frontend(self.instance())
+    self.frontend_thread = threading.Thread(target=self.frontend.start_frontend)
+    self.frontend_thread.daemon = True
     self.frontend_thread.start()
-    # self.backend_thread.start()
-    while not self.stop_event.is_set():
+
       # print "program tick"
-      # self.frontend.update()
-      self.backend.update()
+      # self.backend.update()
       # update interval
-      time.sleep(self.update_tick)
+      # time.sleep(self.update_tick)
+    
+    while not self.stop_event.is_set():
+      pass
 
-    print "stop program"
-    sys.exit(0)
-
-prog = Program()
+prog = Program.instance()
 prog.main()
