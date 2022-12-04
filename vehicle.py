@@ -4,7 +4,7 @@
 # Author: Trevor Woodman
 # Github: https://github.com/turbits
 # Repo: https://github.com/turbits/essex-m2a2
-# Project: Module 2, Assignment 2: System Implementation
+# Project: Module 2 (OOP_PCOM7E), Assignment 2: System Implementation
 # Course: Object Oriented Programming (OOP_PCOM7E September 2022)
 # School: University of Essex
 # Date: September-December, 2022
@@ -17,61 +17,98 @@ from aeb import AutomaticEmergencyBraking
 from state import State
 
 class Vehicle():
-  lka = LaneKeepingAssist()
-  acc = AdaptiveCruiseControl()
-  aeb = AutomaticEmergencyBraking()
+  lka = None
+  acc = None
+  aeb = None
   state = State()
-
-  direction = 0 # north
+  distance_to_entity = None
   speed = 0
+  last_speed = 0
   running = False
   action_history = []
   current_state = State.NONE
   available_functions = ("start", "stop", "accelerate", "brake", "turn", "append_action", "get_state", "set_state")
 
-  def start(self):
-    self.running = True
-
-  def stop(self):
-    self.running = False
-
-  def accelerate(self, value):
-    if value <= 0:
-      return
-    self.speed += value
-
-  def brake(self, value):
-    if value <= 0:
-      return
-    self.speed -= value
-
-  def turn(self, degrees):
-    if value <= 0:
-      return
-    self.direction += degrees
-
-  def append_action(self, action_name, value=0):
-    print action_name
-    print value
-    if value == 0:
-      self.action_history.append([action_name])
-    else:
-      self.action_history.append([action_name, value])
+  def __init__(self):
+    self.start()
+    self.lka = LaneKeepingAssist(self)
+    self.acc = AdaptiveCruiseControl(self)
+    self.aeb = AutomaticEmergencyBraking(self)
 
   def get_state(self):
     return self.current_state
 
   def set_state(self, state):
     if state not in self.state.states:
-      print "not in"
+      c_err("AVS-VEH-BAD", "Attempted to set invalid state: {}".format(state))
       return
     self.current_state = state
-    print self.current_state
-    return
+  
+  def entity_detected(self, distance=0, clear=False):
+    if clear:
+      self.append_action("entity detection clear")
+      self.distance_to_entity = None
+      return
+    self.append_action("entity detection", distance)
+    self.distance_to_entity = distance
+
+  def start(self):
+    self.set_state(State.IDLE)
+    self.running = True
+    self.append_action("start")
+
+  def stop(self):
+    self.set_state(State.OFF)
+    self.running = False
+    self.append_action("stop")
+
+  def idle(self):
+    self.set_state(State.IDLE)
+    self.append_action("idle")
+
+  def accelerate(self, value):
+    if value <= 0:
+      return
+    self.last_speed = self.speed
+    self.set_state(State.ACCELERATE)
+    self.speed += value
+    self.append_action("accelerate", value)
+  
+  def maintain(self):
+    self.last_speed = self.speed
+    self.set_state(State.MAINTAIN)
+    self.append_action("maintain")
+
+  def brake(self, value):
+    if value <= 0:
+      return
+    self.last_speed = self.speed
+    self.set_state(State.DECELERATE)
+    self.speed -= value
+    self.append_action("brake", value)
+
+  def turn(self, degrees):
+    if value <= 0:
+      return
+    self.direction += degrees
+    self.set_state(State.TURN)
+    self.append_action("turn", degrees)
+
+  def append_action(self, action_name, value=0):
+    if value == 0:
+      self.action_history.append([action_name])
+    else:
+      self.action_history.append([action_name, value])
 
   def vehicle_functions(self):
     print "Vehicle Functions:"
     for count, item in enumerate(self.available_actions):
       print "{}: {}".format(count, item)
     return
-    
+  
+  def update(self, traffic_detected):
+    self.lka.update(self)
+    self.acc.update(self)
+    self.aeb.update(self)
+    if speed == 0:
+      self.idle()
