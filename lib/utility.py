@@ -12,10 +12,6 @@
 
 prompt = "$"
 
-# https://stackoverflow.com/a/1695250
-def enum(**enums):
-  return type('Enum', (), enums)
-
 def c_err(code, msg):
   print "ERROR: {}\nREASON: {}".format(code, msg)
   return
@@ -37,14 +33,3 @@ def get_choice(list):
       return int(count)
   # print c_err("AVS-FRO-USER", "Invalid choice, please try again")
   return get_choice(list)
-
-def get_yn(question):
-  reply = str(raw_input(question + " (y/n): ")).lower().strip()
-
-  if reply not in ['y', 'yes', 'n', 'no']:
-    print c_err("AVS-FRO-USER", "Invalid choice, please try again")
-    return get_yn(question)
-  
-  if reply in ['y', 'yes']:
-    return True
-  return False
