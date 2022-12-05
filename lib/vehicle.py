@@ -10,27 +10,30 @@
 # Date: September-December, 2022
 # +===================================================================+
 
-from utility import enum
-from lka import LaneKeepingAssist
-from acc import AdaptiveCruiseControl
-from aeb import AutomaticEmergencyBraking
-from state import State
+from lib.utility import enum
+from lib.lka import LaneKeepingAssist
+from lib.acc import AdaptiveCruiseControl
+from lib.aeb import AutomaticEmergencyBraking
+from lib.state import State
 
 class Vehicle():
   lka = None
   acc = None
   aeb = None
   state = State()
-  distance_to_entity = None
+  # distance_to_entity = None
+  entity_in_range = False
   speed = 0
   last_speed = 0
+  top_speed = 100
   running = False
   action_history = []
   current_state = State.NONE
-  available_functions = ("start", "stop", "accelerate", "brake", "turn", "append_action", "get_state", "set_state")
+  available_functions = ("start", "stop", "accelerate", "decelerate", "turn", "append_action", "get_state", "set_state")
 
   def __init__(self):
     self.start()
+    # initialise subsystems
     self.lka = LaneKeepingAssist(self)
     self.acc = AdaptiveCruiseControl(self)
     self.aeb = AutomaticEmergencyBraking(self)
@@ -44,13 +47,15 @@ class Vehicle():
       return
     self.current_state = state
   
-  def entity_detected(self, distance=0, clear=False):
+  def entity_detected(self, clear=False):
     if clear:
       self.append_action("entity detection clear")
-      self.distance_to_entity = None
+      entity_in_range = False
+      # self.distance_to_entity = None
       return
-    self.append_action("entity detection", distance)
-    self.distance_to_entity = distance
+    self.append_action("entity detection")
+    entity_in_range = True
+    # self.distance_to_entity = distance
 
   def start(self):
     self.set_state(State.IDLE)
@@ -79,13 +84,13 @@ class Vehicle():
     self.set_state(State.MAINTAIN)
     self.append_action("maintain")
 
-  def brake(self, value):
+  def decelerate(self, value):
     if value <= 0:
       return
     self.last_speed = self.speed
     self.set_state(State.DECELERATE)
     self.speed -= value
-    self.append_action("brake", value)
+    self.append_action("decelerate", value)
 
   def turn(self, degrees):
     if value <= 0:

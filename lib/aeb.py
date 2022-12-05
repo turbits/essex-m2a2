@@ -12,26 +12,22 @@
 
 class AutomaticEmergencyBraking():
   collision_detected = False
-  distance_to_entity = 0
-  minimum_collision_distance = 5
+  # did not have time to implement a distance detection/reaction system, instead this system monitors an entity in the vehicle's path and if the other vehicle full stops, the AEB system will also full stop 
+  # distance_to_entity = 0
+  # minimum_collision_distance = 5
   vh = None
   
   def __init__(self, vehicle):
     self.vh = vehicle
 
   def emergency_brake(self):
-    self.vh.brake(self.vh.speed)
+    self.vh.decelerate(self.vh.speed)
     self.vh.set_state(self.vh.state.IDLE)
 
-  def detect_collision(self):
-    # for row in self.detection_matrix:
-    #   for cell in row:
-    #     if cell == 1 and self.distance_to_entity <= self.minimum_collision_distance:
-    #       return True
-    # return False
-    if distance_to_entity <= self.minimum_collision_distance:
-      collision_detected = True
-      self.vh.entity_detected(distance=distance_to_entity)
+  def detect_collision(self, entity):
+    if entity.speed == 0:
+      self.collision_detected = True
+      self.vh.entity_detected()
     else:
       collision_detected = False
       self.vh.entity_detected(clear=True)

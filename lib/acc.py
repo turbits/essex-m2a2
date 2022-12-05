@@ -23,10 +23,10 @@ class AdaptiveCruiseControl():
 
   def __init__(self, vehicle):
     self.vh = vehicle
-  
+
   def queue_command(self, command):
     self.commands_queue.enqueue(command)
-  
+
   def run_command(self):
     self.commands_queue.dequeue()(self)
 
@@ -39,9 +39,9 @@ class AdaptiveCruiseControl():
     self.run_command()
 
   def decelerate(self):
-    self.queue_command(self.vh.brake(self.vh.speed - self.target_speed))
+    self.queue_command(self.vh.decelerate(self.vh.speed - self.target_speed))
     self.run_command()
-  
+
   def activate(self):
     self.active = True
 

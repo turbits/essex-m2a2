@@ -17,7 +17,7 @@ def enum(**enums):
   return type('Enum', (), enums)
 
 def c_err(code, msg):
-  print "ERROR: {}\n{}".format(code, msg)
+  print "ERROR: {}\nREASON: {}".format(code, msg)
   return
 
 def get_choice(list):
@@ -25,9 +25,11 @@ def get_choice(list):
     print "{}: {}".format(count, value)
 
   user_input = raw_input("{} ".format(prompt))
+  if user_input == 'q':
+    return 'q'
   for count, value in enumerate(list):
     if not user_input.isalnum():
-      print "invalid input; not alphanumeric"
+      c_err("AVS-FRO-USER", "Invalid choice, please try again")
       return ""
     elif user_input == value:
       return value.lower().strip()
