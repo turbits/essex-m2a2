@@ -45,17 +45,18 @@ Another system that I began to work out but did not complete was the idea of sys
 
 ### System Identifiers
 
-| System ID | System                                 |
-| --------- | -------------------------------------- |
-| AVS       | Autonomous Vehicle System; program     |
-| VEH       | Vehicle; system                        |
-| LKA       | Lane-keeping Assist; subsystem         |
-| AEB       | Automatic Emergency Braking; subsystem |
-| ACC       | Adaptive Cruise Control; subsystem     |
-| FRO       | Frontend; system                       |
-| BAK       | Backend; system                        |
-| TST       | Testing; system                        |
-| UTL       | Utility; helper module                 |
+| System ID | System                                            |
+| --------- | ------------------------------------------------- |
+| AVS       | Autonomous Vehicle System; the program as a whole |
+| PRO       | Program; the main class                           |
+| VEH       | Vehicle; system                                   |
+| LKA       | Lane-keeping Assist; subsystem                    |
+| AEB       | Automatic Emergency Braking; subsystem            |
+| ACC       | Adaptive Cruise Control; subsystem                |
+| FRO       | Frontend; system                                  |
+| BAK       | Backend; system                                   |
+| TST       | Testing; system                                   |
+| UTL       | Utility; helper module                            |
 
 ### Status Codes
 
