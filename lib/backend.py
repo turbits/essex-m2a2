@@ -71,12 +71,12 @@ class Backend():
   def traffic_speed_change(self):
     speed = self.traffic.speed
     top_speed = self.top_traffic_speed
-    # 20% chance of traffic changing speed
+    # 50% chance of traffic changing speed
     traffic_speed_change_chance = random.randint(1, 100)
-    if traffic_speed_change_chance <= 20:
-      # 20% chance of traffic speeding up
+    if traffic_speed_change_chance <= 50:
+      # 50% chance of traffic speeding up
       traffic_speed_up_chance = random.randint(1, 100)
-      if traffic_speed_up_chance <= 20:
+      if traffic_speed_up_chance <= 50:
         # traffic speeds up
         val = random.randint(1, 10)
         if speed + val >= top_speed:
