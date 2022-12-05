@@ -30,10 +30,13 @@ class Backend():
     self.program = program
 
   def start_user_vehicle_simulation(self):
-    # set initial target speed of user vehicle ACC
-    self.vh.acc.target_speed = random.randint(1, self.vh.top_speed)
-    # set initial speed of user vehicle
-    self.vh.speed = random.randint(1, self.vh.top_speed)
+    # initialize ACC
+    self.vh.acc.activate()
+    if self.traffic_exists == True:
+      self.vh.acc.target_speed = self.traffic.speed
+    else:
+      # set initial target speed of user vehicle ACC
+      self.vh.acc.target_speed = random.randint(1, self.vh.top_speed)
 
   def start_backend(self):
     if self.program.data_gen_on == True:
@@ -44,7 +47,6 @@ class Backend():
       self.update()
 
   def stop_backend(self):
-    # print "DEBUG: stop_backend: sys.exit(0)"
     vh = None
     traffic = None
     road = None
@@ -53,7 +55,7 @@ class Backend():
   def generate_road(self):
     # called by update    
     # 10% chance for road to deviate slightly (and trigger LKA)
-    road_deviation_chance = random.randint(0, 100)
+    road_deviation_chance = random.randint(1, 100)
     if road_deviation_chance <= 10:
       left_or_right = random.randint(0, 1)
       if left_or_right == 0:
@@ -69,14 +71,14 @@ class Backend():
   def traffic_speed_change(self):
     speed = self.traffic.speed
     top_speed = self.top_traffic_speed
-    # 50% chance of traffic changing speed
-    traffic_speed_change_chance = random.randint(0, 100)
-    if traffic_speed_change_chance <= 50:
-      # 50% chance of traffic speeding up
-      traffic_speed_up_chance = random.randint(0, 100)
-      if traffic_speed_up_chance <= 50:
+    # 20% chance of traffic changing speed
+    traffic_speed_change_chance = random.randint(1, 100)
+    if traffic_speed_change_chance <= 20:
+      # 20% chance of traffic speeding up
+      traffic_speed_up_chance = random.randint(1, 100)
+      if traffic_speed_up_chance <= 20:
         # traffic speeds up
-        val = random.randint(1, top_speed)
+        val = random.randint(1, 10)
         if speed + val >= top_speed:
           speed = top_speed
         else:
@@ -84,7 +86,7 @@ class Backend():
       else:
         # traffic slows down, but not if already 0
         if not speed == 0:
-          val = random.randint(1, speed)
+          val = random.randint(1, 10)
           if speed - val <= 0:
             speed = 0
           else:
@@ -94,47 +96,47 @@ class Backend():
       self.traffic.maintain()
 
   def traffic_emerg_stop(self):
-    emerg_stop = False
-    traffic_full_stop_chance = random.randint(0, 100)
+    traffic_full_stop_chance = random.randint(1, 100)
     if traffic_full_stop_chance <= 10:
       self.traffic.aeb.emergency_brake()
 
   def spawn_traffic(self):
     if self.traffic_exists == False:
-      # 70% chance of traffic coming into existence
-      traffic_chance = random.randint(0, 100)
-      if traffic_chance <= 70:
+      # 90% chance of traffic coming into existence
+      traffic_chance = random.randint(1, 100)
+      if traffic_chance <= 90:
         self.traffic = Vehicle()
         self.traffic_exists = True
         self.traffic.accelerate(random.randint(1, self.top_traffic_speed))
-    # else:
-    #   # traffic exists; 5% chance of traffic going away
-    #   traffic_stop_chance = random.randint(0, 100)
-    #   if traffic_stop_chance <= 5:
-    #     self.traffic_exists = False
-    #     self.traffic = None
+    else:
+      # traffic exists; 2% chance of traffic going away
+      traffic_stop_chance = random.randint(1, 100)
+      if traffic_stop_chance <= 2:
+        self.traffic_exists = False
+        self.traffic = None
 
   def get_traffic_stats(self):
     _speed_change = 0
     _speed_change_type = ""
 
-    # acceleration
-    if self.traffic.speed > self.traffic.last_speed:
-      _speed_change = int(self.traffic.speed - self.traffic.last_speed)
-      _speed_change_type = "+"
-    # deceleration
-    elif self.traffic.speed < self.traffic.last_speed:
-      _speed_change = int(self.traffic.last_speed - self.traffic.speed)
-      _speed_change_type = "-"
-    # no change
-    elif self.traffic.speed == self.traffic.last_speed or self.traffic.speed == 0 or self.traffic.last_speed == 0:
-      _speed_change = 0
-      _speed_change_type = ""
+    if self.traffic_exists == True:
+      # acceleration
+      if self.traffic.speed > self.traffic.last_speed:
+        _speed_change = int(self.traffic.speed - self.traffic.last_speed)
+        _speed_change_type = "+"
+      # deceleration
+      elif self.traffic.speed < self.traffic.last_speed:
+        _speed_change = int(self.traffic.last_speed - self.traffic.speed)
+        _speed_change_type = "-"
+      # no change
+      elif self.traffic.speed == self.traffic.last_speed or self.traffic.speed == 0 or self.traffic.last_speed == 0:
+        _speed_change = 0
+        _speed_change_type = ""
 
     print "TRAFFIC STATE: {}".format(self.traffic.get_state().split(" ")[0] if self.traffic_exists == True else "N/A")
     print "TRAFFIC SPEED CHANGE: {}{}".format(_speed_change_type, _speed_change)
     print "TRAFFIC SPEED: {}".format(self.traffic.speed if self.traffic_exists == True else "N/A")
-    print "TRAFFIC E-STOP: {}".format(self.traffic.aeb.collision_detected if self.traffic_exists == True else "N/A")
+    print "TRAFFIC E-STOP: {}".format(self.traffic.aeb.emergency_brake_engaged if self.traffic_exists == True else "N/A")
 
   def generate_traffic(self):
     # called by update
@@ -152,53 +154,38 @@ class Backend():
     _speed_change = 0
     _speed_change_type = ""
 
-    # acceleration
-    if self.vh.speed > self.vh.last_speed:
-      _speed_change = int(self.vh.speed - self.vh.last_speed)
-      _speed_change_type = "+"
-    # deceleration
-    elif self.vh.speed < self.vh.last_speed:
-      _speed_change = int(self.vh.last_speed - self.vh.speed)
-      _speed_change_type = "-"
-    # no change
-    elif self.vh.speed == self.vh.last_speed or self.vh.speed == 0 or self.vh.last_speed == 0:
-      print "DEBUG: no change"
-      _speed_change = 0
-      _speed_change_type = ""
-
-    print _speed_change
-    print _speed_change_type
-    print self.vh.speed
-    print self.vh.last_speed
+    if self.vh.running == True:
+      # acceleration
+      if self.vh.speed > self.vh.last_speed:
+        _speed_change = int(self.vh.speed - self.vh.last_speed)
+        _speed_change_type = "+"
+      # deceleration
+      elif self.vh.speed < self.vh.last_speed:
+        _speed_change = int(self.vh.last_speed - self.vh.speed)
+        _speed_change_type = "-"
+      # no change
+      elif self.vh.speed == self.vh.last_speed or self.vh.speed == 0 or self.vh.last_speed == 0:
+        _speed_change = 0
+        _speed_change_type = ""
     
     print "VEHICLE STATE: {}".format(self.vh.get_state().split(" ")[0] if self.vh.running == True else "N/A")
     print "VEHICLE SPEED CHANGE: {}{}".format(_speed_change_type, _speed_change)
     print "VEHICLE SPEED: {}".format(self.vh.speed if self.vh.running == True else "N/A")
-    print "VEHICLE E-STOP: {}".format(self.vh.aeb.collision_detected if self.vh.running == True else "N/A")
-    print "VEHICLE LKA: {}".format(self.vh.lka.deviation_detected if self.vh.running == True else "N/A")
-    print "VEHICLE LKA LEFT: {}".format(self.vh.lka.current_deviation["left"] if self.vh.running == True else "N/A")
-    print "VEHICLE LKA RIGHT: {}".format(self.vh.lka.current_deviation["right"] if self.vh.running == True else "N/A")
+    print "VEHICLE E-STOP: {}".format(self.vh.aeb.emergency_brake_engaged if self.vh.running == True else "N/A")
     print "VEHICLE ACC ACTIVE: {}".format(self.vh.acc.active if self.vh.running == True else "N/A")
-  
+
   def generate_vehicle(self):
     # called by update
     # generate vehicle will run every update_tick - set in Program class
-    # if there is no traffic, vehicle will accelerate until it reaches target_speed
-    if self.traffic_exists == False:
-      if self.vh.speed < self.vh.acc.target_speed:
-        # accelerate a random amount from 1-10
-        self.vh.accelerate(random.randint(1, 10))
-      elif self.vh.speed > self.vh.acc.target_speed:
-        # decelerate a random amount from 1-10 but not below 0
-        _rand = random.randint(1, 10)
-        if self.vh.speed - _rand <= 0:
-          self.vh.decelerate(_rand)
-    self.spawn_traffic()
     if self.traffic_exists == True:
-      # traffic speed change - 50% chance
-      self.traffic_speed_change()
-      # traffic emerg stop - 10% chance
-      self.traffic_emerg_stop()
+      self.vh.acc.entity_in_range = True
+      self.vh.acc.target_speed = self.traffic.speed
+      # monitor for collision
+      self.vh.aeb.update(self.traffic)
+    else:
+      self.vh.acc.entity_in_range = False
+    
+    self.vh.acc.update(self.traffic)
 
   # DATA STREAM CONTROL
   def show_data_stream(self):
@@ -217,7 +204,7 @@ class Backend():
     while not self.program.stop_event.is_set() and self.program.data_gen_on:
       self.generate_road()
       self.generate_traffic()
-      # operate user vehicle
+      self.generate_vehicle()
       # self.vh.aeb.update(traffic)
       if self.print_stats:
         print "\n\nSTATS: start backend update tick"
