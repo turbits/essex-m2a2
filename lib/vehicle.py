@@ -10,7 +10,6 @@
 # Date: September-December, 2022
 # +===================================================================+
 
-from lib.utility import enum
 from lib.lka import LaneKeepingAssist
 from lib.acc import AdaptiveCruiseControl
 from lib.aeb import AutomaticEmergencyBraking
@@ -58,13 +57,13 @@ class Vehicle():
     # self.distance_to_entity = distance
 
   def start(self):
-    self.set_state(State.IDLE)
     self.running = True
+    self.set_state(State.IDLE)
     self.append_action("start")
 
   def stop(self):
-    self.set_state(State.OFF)
     self.running = False
+    self.set_state(State.OFF)
     self.append_action("stop")
 
   def idle(self):
@@ -104,12 +103,6 @@ class Vehicle():
       self.action_history.append([action_name])
     else:
       self.action_history.append([action_name, value])
-
-  def vehicle_functions(self):
-    print "Vehicle Functions:"
-    for count, item in enumerate(self.available_actions):
-      print "{}: {}".format(count, item)
-    return
   
   def update(self, traffic_detected):
     self.lka.update(self)
