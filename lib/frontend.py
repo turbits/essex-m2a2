@@ -55,5 +55,4 @@ class Frontend():
     return self.main_menu()
 
   def start_frontend(self):
-    print "DEBUG: start_frontend"
     return self.main_menu()
