@@ -1,8 +1,8 @@
 # Assignment Requirements and Results
 
-This file directly corrolates to the requirements listed in the assignment page to provide some context on meeting these requirements.
+This file attempts to corrolate the requirements listed in the assignment page to the project features to provide some context on meeting these requirements.
 
-I don't see this as counting towards the 600 word limit in the README, as it is technically a different file, and primarily to assist with navigating this project and presenting that I have (or haven't) met requirements.
+I don't see this as counting towards the 600 word limit in the README, as it is technically a different file, and primarily to assist with navigating this project and presenting that I have (or haven't) met requirements, so hopefully this is acceptable.
 
 ## Diagrams
 
@@ -31,4 +31,5 @@ I don't see this as counting towards the 600 word limit in the README, as it is 
 
 ## Summary
 
-I am honestly not entirely happy with the end result here, given I was unable to implement the Lane-keeping Assist subsystem or more robust testing, but I am OK with the progress I made and the ability to demonstrate the ability to implement the other two systems, as well as the ability to implement the other requirements of the project and the overall functionality of the program. I reworked several diagrams, and added a sequence diagram to demonstrate the overall flow of the program. I also added this requirements file to provide some context on the assignment requirements and how I met them as the project seemed to call for one given the complexity.
+I am honestly not entirely happy with the end result here, given I was unable to implement the Lane-keeping Assist subsystem or more robust testing, and some things are a bit off (data stream printouts being incorrect in some situations), but I am OK with the progress I made and the demonstrated ability to implement the other two systems, implementing the other requirements of the project, and working out the overall functionality of the program.
+I reworked several diagrams, and added a sequence diagram to demonstrate the overall flow of the program. I also added this requirements file to provide some context on the assignment requirements and how I met them as the project seemed to call for one given the complexity.
