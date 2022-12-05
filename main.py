@@ -11,13 +11,13 @@
 # +===================================================================+
 
 import signal
-from sys import stdout
 import time
 import threading
-from title import title_art
-from frontend import Frontend
-from backend import Backend
-from utility import get_choice
+from sys import stdout
+from lib.title import title_art
+from lib.frontend import Frontend
+from lib.backend import Backend
+from lib.utility import get_choice, c_err
 
 class Program(object):
   _instance = None
@@ -29,7 +29,7 @@ class Program(object):
   stop_event = threading.Event()
   backend_thread = None
   frontend_thread = None
-  
+
   def __init__(self):
     raise RuntimeError("Call instance() instead")
   
@@ -44,14 +44,17 @@ class Program(object):
     return cls._instance
 
   def start_data_generation(self):
-    self.data_gen_on = True
-    self.backend_thread = threading.Thread(target=self.backend.start_backend)
-    self.backend_thread.daemon = True
-    self.backend_thread.start()
+    if self.data_gen_on:
+      c_err("AVS-PRO-COMM", "DATA GENERATION IS ALREADY ON")
+    else:
+      self.data_gen_on = True
+      self.backend_thread = threading.Thread(target=self.backend.start_backend)
+      self.backend_thread.daemon = True
+      self.backend_thread.start()
 
   def stop_data_generation(self):
     self.data_gen_on = False
-  
+
   def stop(self):
     self.stop_event.set()
     print "Exiting program..."
