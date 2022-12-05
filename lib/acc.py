@@ -14,7 +14,6 @@ from collections import deque
 
 class AdaptiveCruiseControl():
   active = False
-  vehicle_in_range = False
   target_speed = 100
   # the command queue here is irrelevant really, but it was a requirement of the assignment
   # to implement a queue. the commands are queued and processed in one function call
@@ -25,13 +24,13 @@ class AdaptiveCruiseControl():
     self.vh = vehicle
 
   def queue_command(self, command):
-    self.commands_queue.enqueue(command)
+    self.commands_queue.append(command)
 
   def run_command(self):
-    self.commands_queue.dequeue()(self)
+    self.commands_queue.popleft()
 
   def maintain(self):
-    self.queue_command(self.vh.maintain(self.target_speed))
+    self.queue_command(self.vh.maintain())
     self.run_command()
 
   def accelerate(self):
@@ -48,14 +47,16 @@ class AdaptiveCruiseControl():
   def deactivate(self):
     self.active = False
 
-  def update(self):
+  def update(self, entity):
     if self.active:
-      if self.vehicle_in_range:
-        self.maintain()
-      else:
+      if self.entity_in_range:
         # if target speed is greater than current speed, accelerate
-        if self.target_speed > self.vh.speed:
+        if entity.speed > self.vh.speed:
           self.accelerate()
-        else:
+        elif entity.speed < self.vh.speed:
           # if current speed is greater than target speed, decelerate
           self.decelerate()
+        else:
+          # if current speed is equal to target speed, maintain
+          self.maintain()
+
