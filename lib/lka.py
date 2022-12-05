@@ -21,24 +21,24 @@ class LaneKeepingAssist():
   def __init__(self, vehicle):
     self.vh = vehicle
 
-  def get_drift(self):
+  def get_deviation(self):
     return self.current_deviation
 
-  def set_drift(self, side, value):
+  def set_deviation(self, side, value):
     for s in self.current_deviation:
       if side == s:
         self.current_deviation[s] = value
 
-  def correct_drift(self):
-    self.set_drift('left', 0)
-    self.set_drift('right', 0)
+  def correct_deviation(self):
+    self.set_deviation('left', 0)
+    self.set_deviation('right', 0)
 
   def update(self, road):
     # 'road' being the road defined in the Backend class, indicating road deviation
     if road["left"] >= self.max_deviation or road["right"] >= self.max_deviation:
       deviation_detected = True
       # if the road deviation is greater than the LKA's maximum_deviation on either side,
-      # we should trigger LKA's drift correction to keep the car inside the lines
-      correct_drift()
+      # we should trigger LKA's deviation correction to keep the car inside the lines
+      correct_deviation()
     else:
       deviation_detected = False
